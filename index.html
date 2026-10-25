@@ -1,0 +1,518 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="description" content="A 6-minute diagnostic from Lim Pei Fang. Find out which of the four loops is running your life, and where to start breaking it with the CLEAR Method.">
+<meta property="og:title" content="The Root Pattern Audit">
+<meta property="og:description" content="Which loop is running your life? Spiral, Low Self-Worth, Burnout or Poverty Mindset. Take the 6-minute audit.">
+<meta property="og:type" content="website">
+<title>Root Pattern Audit</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Young+Serif&family=Public+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500&display=swap">
+<style>
+[hidden]{display:none!important}
+html{-webkit-text-size-adjust:100%}
+body{margin:0}
+img{max-width:100%}
+/* Layout: one narrow reading column; a closing "loop" ring tracks progress; results read as a four-loop report */
+:root{
+  --bg:#EDF0F3; --surface:#FFFFFF; --ink:#15212C; --muted:#5A6774; --line:#D5DCE3;
+  --accent:#0E5A57; --accent-soft:#DCEBE9; --on-accent:#FFFFFF;
+  --spiral:#4B4FA8; --worth:#8A3F7A; --burnout:#B07A12; --poverty:#3D7A3A;
+  --hot:#B3402E; --warm:#A87100; --cool:#3F7D5C; --err:#B3402E;
+  --f-display:"Young Serif", Georgia, "Times New Roman", serif;
+  --f-body:"Public Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --f-data:"IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0F151B; --surface:#17202A; --ink:#E6ECF1; --muted:#9AA8B5; --line:#2A3743;
+  --accent:#5FB8B2; --accent-soft:#183331; --on-accent:#0B1A19;
+  --spiral:#8E92F0; --worth:#D58AC4; --burnout:#E0AE4A; --poverty:#86C47F;
+  --hot:#EE7C68; --warm:#E0AE4A; --cool:#7CC49E; --err:#EE7C68; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0F151B; --surface:#17202A; --ink:#E6ECF1; --muted:#9AA8B5; --line:#2A3743;
+  --accent:#5FB8B2; --accent-soft:#183331; --on-accent:#0B1A19;
+  --spiral:#8E92F0; --worth:#D58AC4; --burnout:#E0AE4A; --poverty:#86C47F;
+  --hot:#EE7C68; --warm:#E0AE4A; --cool:#7CC49E; --err:#EE7C68; color-scheme:dark}
+
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.6;
+  padding-left:max(16px, env(safe-area-inset-left, 0px));padding-right:max(16px, env(safe-area-inset-right, 0px));padding-block:32px 64px}
+.wrap{max-width:680px;margin:0 auto;display:flex;flex-direction:column;gap:28px}
+h1,h2,h3{font-family:var(--f-display);font-weight:400;text-wrap:balance;margin:0;line-height:1.2}
+h1{font-size:clamp(2rem,6vw,2.75rem)}
+h2{font-size:1.5rem}
+h3{font-size:1.15rem}
+p{margin:0}
+.eyebrow{font-size:.75rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.lede{font-size:1.1rem;color:var(--muted);max-width:60ch}
+.stack{display:flex;flex-direction:column;gap:14px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:24px}
+button,.btn{font:inherit;cursor:pointer;border-radius:10px;border:1px solid var(--line);background:var(--surface);color:var(--ink);padding:12px 18px;font-weight:600;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;gap:8px}
+.btn-primary{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
+button:focus-visible,.btn:focus-visible,input:focus-visible,textarea:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+button:disabled{opacity:.4;cursor:not-allowed}
+.row{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+label.field{display:flex;flex-direction:column;gap:6px;font-weight:600;font-size:.9rem}
+input[type=text],input[type=email],textarea{font:inherit;padding:12px 14px;border-radius:10px;border:1px solid var(--line);background:var(--bg);color:var(--ink);width:100%}
+textarea{min-height:96px;resize:vertical}
+.err{color:var(--err);font-size:.85rem;min-height:1.2em}
+
+/* intro */
+.facts{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.fact{border-top:2px solid var(--accent);padding-top:10px}
+.fact b{font-family:var(--f-data);font-size:1.25rem;display:block}
+.fact span{font-size:.85rem;color:var(--muted)}
+@media (max-width:520px){.facts{grid-template-columns:1fr}}
+
+/* question */
+.qhead{display:flex;align-items:center;gap:16px}
+.ring{flex:none;width:64px;height:64px;position:relative}
+.ring svg{width:64px;height:64px;transform:rotate(-90deg)}
+.ring .track{fill:none;stroke:var(--line);stroke-width:5}
+.ring .arc{fill:none;stroke:var(--accent);stroke-width:5;stroke-linecap:round;transition:stroke-dashoffset .35s ease}
+.ring .num{position:absolute;inset:0;display:grid;place-items:center;font-family:var(--f-data);font-size:.85rem}
+.qtext{font-family:var(--f-display);font-size:clamp(1.3rem,4.2vw,1.7rem);line-height:1.3;min-height:3.9em;text-wrap:balance}
+.scale{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.scale button{flex-direction:column;gap:2px;padding:14px 6px;font-weight:500;font-size:.9rem}
+.scale button b{font-family:var(--f-data);font-size:1.1rem}
+.scale button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
+@media (max-width:460px){.scale{grid-template-columns:1fr}.scale button{flex-direction:row;justify-content:flex-start;gap:12px;padding:12px 14px}}
+.hint{font-size:.8rem;color:var(--muted)}
+
+/* gate */
+.locked{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.locked div{border:1px dashed var(--line);border-radius:10px;padding:12px 8px;text-align:center;font-size:.8rem;color:var(--muted)}
+.locked div i{display:block;height:6px;border-radius:3px;margin:8px auto 0;width:70%;background:var(--line)}
+@media (max-width:460px){.locked{grid-template-columns:repeat(2,1fr)}}
+
+/* results */
+.loops{display:flex;flex-direction:column;gap:16px}
+.loop{display:grid;grid-template-columns:1fr auto;gap:6px 12px;align-items:center}
+.loop .name{font-weight:600;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.loop .dot{width:10px;height:10px;border-radius:50%;flex:none}
+.loop .val{font-family:var(--f-data);font-size:.9rem;font-variant-numeric:tabular-nums;color:var(--muted)}
+.bar{grid-column:1 / -1;height:10px;border-radius:5px;background:var(--line);overflow:hidden}
+.bar i{display:block;height:100%;border-radius:5px}
+.chip{font-size:.72rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:2px 8px;border-radius:99px;border:1px solid currentColor}
+.chip.hot{color:var(--hot)} .chip.warm{color:var(--warm)} .chip.cool{color:var(--cool)}
+.loop.primary .name{font-size:1.05rem}
+.clear{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
+.clear div{border:1px solid var(--line);border-radius:10px;padding:10px 4px;text-align:center;font-size:.75rem;color:var(--muted)}
+.clear div b{display:block;font-family:var(--f-display);font-weight:400;font-size:1.6rem;color:var(--ink);line-height:1.1}
+.clear div.lead{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
+.clear div.lead b{color:var(--on-accent)}
+.clear div.next{border-color:var(--accent);color:var(--accent)}
+.belief{border-left:3px solid var(--accent);padding-left:14px;font-family:var(--f-display);font-size:1.1rem}
+ol.steps{margin:0;padding-left:1.3em;display:flex;flex-direction:column;gap:8px}
+.meter{font-family:var(--f-data);font-size:2.25rem;line-height:1}
+.tier{border-color:var(--accent);background:var(--accent-soft)}
+.quote{font-family:var(--f-display);font-size:1.1rem}
+.cta{background:var(--ink);color:var(--bg);border-radius:14px;padding:28px 24px;display:flex;flex-direction:column;gap:14px}
+.cta .btn-primary{align-self:flex-start;background:var(--accent);border-color:var(--accent)}
+.cta p{color:var(--bg);opacity:.85;max-width:56ch}
+.small{font-size:.85rem;color:var(--muted)}
+.toast{font-size:.85rem;color:var(--accent);min-height:1.2em}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <!-- INTRO -->
+  <section id="intro" class="stack" style="gap:24px">
+    <div class="stack">
+      <span class="eyebrow">Lim Pei Fang · The Invisible Loop · CLEAR Method</span>
+      <h1>The Root Pattern Audit</h1>
+      <p class="lede">You replay the same worry. You keep delivering while running on empty. You shrink in rooms you have earned. However much you have, it never feels like enough. This audit shows which loop is running your life, how deep it goes, and where to start breaking it.</p>
+    </div>
+    <div class="facts">
+      <div class="fact"><b>35</b><span>statements, one at a time</span></div>
+      <div class="fact"><b>~6 min</b><span>go fast, trust first instinct</span></div>
+      <div class="fact"><b>4 loops</b><span>scored, with your starting move</span></div>
+    </div>
+    <div class="card stack">
+      <p>Rate each statement for <strong>the past month</strong>: Never, Occasionally, Often or Constantly. Go fast. Your first instinct is more accurate than a considered answer, because the considered one is already managing how you look.</p>
+      <div class="row">
+        <button class="btn-primary" id="startBtn">Start the audit</button>
+        <button id="resumeBtn" hidden>Resume where I left off</button>
+      </div>
+    </div>
+    <p class="small">There are no right answers. If what comes up feels too heavy to work through alone, please speak to a doctor, a counsellor or someone you trust.</p>
+  </section>
+
+  <!-- QUESTION -->
+  <section id="quiz" class="stack" style="gap:22px" hidden>
+    <div class="qhead">
+      <div class="ring" aria-hidden="true">
+        <svg viewBox="0 0 64 64"><circle class="track" cx="32" cy="32" r="27"/><circle class="arc" id="arc" cx="32" cy="32" r="27"/></svg>
+        <div class="num" id="qnum">1</div>
+      </div>
+      <div class="stack" style="gap:2px">
+        <span class="eyebrow" id="qcount">Statement 1 of 35</span>
+        <span class="small">How true has this been for you in the past month?</span>
+      </div>
+    </div>
+    <p class="qtext" id="qtext" aria-live="polite"></p>
+    <div class="scale" id="scale" role="group" aria-label="Rating"></div>
+    <div class="row" style="justify-content:space-between">
+      <button id="backBtn">Back</button>
+      <span class="hint">Keyboard: press 0 to 3</span>
+    </div>
+  </section>
+
+  <!-- NAME YOUR LOOP (optional) -->
+  <section id="loopline" class="stack" style="gap:20px" hidden>
+    <span class="eyebrow">Last step · optional</span>
+    <h2>Name your loop</h2>
+    <p>Name the situation that has now repeated at least three times in your life, with different people or in different settings. One or two sentences is enough.</p>
+    <label class="field" for="loopText">My loop
+      <textarea id="loopText" placeholder="e.g. Every new role, I end up as the one everyone hands the impossible deadline to."></textarea>
+    </label>
+    <div class="row">
+      <button class="btn-primary" id="loopNext">Continue</button>
+      <button id="loopSkip">Skip</button>
+      <button id="loopBack">Back</button>
+    </div>
+  </section>
+
+  <!-- EMAIL GATE -->
+  <section id="gate" class="stack" style="gap:20px" hidden>
+    <div class="stack">
+      <span class="eyebrow">Your report is ready</span>
+      <h2>Where should we send your result?</h2>
+      <p class="small">Your four loop scores, the belief running underneath, and your starting move are one step away.</p>
+    </div>
+    <div class="locked" aria-hidden="true">
+      <div>Spiral<i></i></div><div>Self-Worth<i></i></div><div>Burnout<i></i></div><div>Poverty Mindset<i></i></div>
+    </div>
+    <form id="gateForm" class="card stack" novalidate>
+      <label class="field" for="gName">First name
+        <input id="gName" type="text" autocomplete="given-name" required>
+      </label>
+      <label class="field" for="gEmail">Email
+        <input id="gEmail" type="email" autocomplete="email" inputmode="email" required>
+      </label>
+      <label class="row small" for="gConsent" style="align-items:flex-start;gap:10px;flex-wrap:nowrap">
+        <input id="gConsent" type="checkbox" style="margin-top:4px">
+        <span>Send me occasional notes from Pei Fang on breaking the loop. Unsubscribe any time.</span>
+      </label>
+      <span class="err" id="gErr" role="alert"></span>
+      <div class="row">
+        <button class="btn-primary" type="submit">Show my report</button>
+        <button type="button" id="gateBack">Back</button>
+      </div>
+    </form>
+  </section>
+
+  <!-- RESULTS -->
+  <section id="results" class="stack" style="gap:24px" hidden>
+    <div class="stack">
+      <span class="eyebrow" id="rDate"></span>
+      <h1 id="rTitle"></h1>
+      <p class="lede" id="rLede"></p>
+    </div>
+
+    <div class="card stack">
+      <h2>Your four loops</h2>
+      <p class="small">Each loop is scored out of 24. Most people register in more than one. The highest is the one running your life right now.</p>
+      <div class="loops" id="loops"></div>
+      <p class="small">0–7 Quiet · 8–15 Active · 16–24 Running your life</p>
+    </div>
+
+    <div class="card stack" id="loopCard" hidden>
+      <span class="eyebrow">Your loop, in your words</span>
+      <p class="quote" id="loopQuote"></p>
+      <p class="small">Keep it where you can see it. Everything in CLEAR is about breaking it.</p>
+    </div>
+
+    <div class="card stack">
+      <span class="eyebrow">What's underneath</span>
+      <p class="belief" id="belief"></p>
+      <div class="row" style="align-items:baseline;gap:14px"><span class="meter" id="rootPct"></span><h3 id="rootLabel"></h3></div>
+      <p id="rootBody"></p>
+    </div>
+
+    <div class="card stack">
+      <span class="eyebrow">Where to start</span>
+      <h2 id="moveTitle"></h2>
+      <div class="clear" id="clearStrip"></div>
+      <p id="moveBody"></p>
+      <h3 style="margin-top:6px">Three first steps this week</h3>
+      <ol class="steps" id="moveSteps"></ol>
+      <p class="small" id="secondNote"></p>
+    </div>
+
+    <div class="card stack tier">
+      <span class="eyebrow">Recommended path</span>
+      <h3 id="tierTitle"></h3>
+      <p id="tierBody"></p>
+    </div>
+
+    <div class="cta">
+      <h2>Talk it through, one on one</h2>
+      <p>If the block is internal, stacking another course or certification on top of it only makes you a more qualified version of stuck. Bring this report to a free conversation. No pitch, just a real look at whether this is the right fit.</p>
+      <a class="btn btn-primary" id="bookBtn" href="#" target="_blank" rel="noopener">Book my free conversation</a>
+    </div>
+
+    <div class="stack" style="gap:8px">
+      <div class="row">
+        <button id="copyBtn">Copy my results</button>
+        <button id="retakeBtn">Retake the audit</button>
+      </div>
+      <span class="toast" id="toast" role="status"></span>
+      <textarea id="copyFallback" hidden readonly style="min-height:180px;font-size:.85rem"></textarea>
+    </div>
+  </section>
+</div>
+
+<script>
+/* ===== Settings to swap before going live ===== */
+var BOOKING_URL = "https://limpeifang.com";   // Calendly link
+var LEAD_WEBHOOK = "";                         // URL that receives {name,email,optIn,scores...} as a POST (e.g. Google Apps Script → Sheet). Empty = not sent.
+
+var LOOPS = {
+  S:{label:"The Spiral", color:"var(--spiral)"},
+  W:{label:"Low Self-Worth", color:"var(--worth)"},
+  B:{label:"Burnout", color:"var(--burnout)"},
+  P:{label:"Poverty Mindset", color:"var(--poverty)"}
+};
+var ORDER = ["S","W","B","P"];
+
+var BANK = {
+ S:["I replay the same conversation or worry long after it is over.",
+    "I rehearse worst-case versions of things that have not happened.",
+    "Things are not going well, and underneath it I believe they are not going to get better.",
+    "I frequently lose sleep over a problem I cannot do anything about.",
+    "When something goes wrong, my first question is “Why me?”",
+    "I find myself repeating the same frustrating story about my situation to others, and every time I tell it, it feels more real.",
+    "I notice every sign that proves things are bad, and brush aside anything that does not fit.",
+    "My first thought in the morning is what else will go wrong today."],
+ W:["I measure my progress against someone else’s and come up short.",
+    "My mood depends on what someone said to me. One casual comment can undo a good day.",
+    "I have turned down an opportunity I wanted, because I was sure I would not be good enough.",
+    "Praise slides off me, but I remember criticism for weeks.",
+    "Before I make a decision, I need someone else to tell me it is okay.",
+    "I catch myself apologising unnecessarily, for taking up space, asking a question, or for things entirely outside my control.",
+    "Around people with bigger titles or more success, I keep my distance because I feel I am not in their league.",
+    "I have not asked to be paid what I am worth, because part of me does not believe I deserve it."],
+ B:["I am busy all the time. Rest makes me feel uneasy. Everything on my list feels equally urgent, so nothing is ever allowed to wait.",
+    "I need to feel in control. I check things twice, and I would rather do it myself than hand it over.",
+    "I do not ask for help. Asking would mean admitting out loud that I cannot hold it all.",
+    "When a message goes unacknowledged, or a meeting happens without me, I feel I am no longer essential.",
+    "I set myself deadlines nobody asked for, because unfinished work keeps nagging at me.",
+    "Even on holiday, I keep answering emails and messages.",
+    "I find myself completely out of patience, frequently snapping at people who have done nothing wrong.",
+    "Even when I have full authority to decide, I hesitate to move until everyone else has validated it."],
+ P:["I check the price before I let myself want something, even when I can afford it.",
+    "When someone gives me a gift, a favour or help, my first thought is how to pay it back.",
+    "I hold back from spending on a course, a coach or a book, even when it could help me grow.",
+    "However much I have, it never quite feels like enough.",
+    "I keep opportunities or contacts to myself, in case someone else takes my share.",
+    "Even when things are stable on paper, I live with a quiet dread that it could all be wiped out overnight.",
+    "When a real breakthrough comes within reach, I hesitate, complicate it and find a reason to say no.",
+    "I have bought something mainly to look successful, even though it squeezed my cash flow."],
+ R:["I have tried books, courses and coaching, and the same problem keeps repeating, just with different people or in different settings.",
+    "I can explain exactly why I am this way and where it comes from, yet my actual week still looks the same.",
+    "I have tried changing jobs, partners or plans to escape a problem, but the same problem found me again and again."]
+};
+var SCALE = ["Never","Occasionally","Often","Constantly"];
+
+var SOLUTION = {
+  S:{lead:0, next:[], title:"Lead with Confront",
+     belief:"Things happen to me, and I cannot change what happens next.",
+     body:"The spiral runs on a horror movie written on your hardest days, before you can see what comes next. Once you believe the story, you start collecting proof for it and brushing aside anything that does not fit. You cannot argue yourself out of a spiral, but you can stop feeding it and look honestly at the belief underneath.",
+     steps:["Write down what you are telling yourself, exactly as it sounds in your head. Then pick out only the facts someone else could see or check, and name what you added: predictions, meaning, blame.",
+            "Ask the old man’s question: “How do I know this isn’t good luck?” Write one way this could help you a year from now.",
+            "Take the one step you can actually see. Not the whole staircase, just the next visible move."]},
+  W:{lead:1, next:[], title:"Lead with Let Go",
+     belief:"I am not good enough.",
+     body:"Low self-worth has nothing to do with how much you have achieved. It is a Not-Enough File you have been reading from for a very long time: every comparison, every criticism, every mistake replayed. Meanwhile the second file, everything you have actually come through, has never been opened. The first file has to be emptied before any new belief will hold.",
+     steps:["Write down what the voice says about you most often, the way it sounds in your head. Seeing it on paper is the start of questioning it.",
+            "Open the second file. Write three hard things you have already come through, and what each one says about you.",
+            "Ask yourself: if I did not need anyone’s permission, what would I do next? Do one small version of it this week."]},
+  B:{lead:2, next:[1], title:"Let Go, then Enlist",
+     belief:"If I stop producing, I will be forgotten.",
+     body:"Busy Armour looks like commitment and high standards. Underneath is an energy problem being treated as a time problem, and no schedule fixes that. A ten-out-of-ten strategy multiplied by zero energy is zero. First let go of the feelings you have pushed down and the idea that asking is a confession. Then make the move strong people skip.",
+     steps:["Before you say yes to anything, ask: does this truly need to be done today? Let one message wait.",
+            "Close one open tab. Pick an unfinished task or unresolved conflict and drop it, hand it off, or give it a date.",
+            "Make one direct, specific ask for help this week. Not a hint. A request, with a name and a date."]},
+  P:{lead:0, next:[1,4], title:"Confront, Let Go, then Rise",
+     belief:"There is not enough, and what I have could be gone tomorrow.",
+     body:"Poverty mindset has little to do with what is in the bank. It is an operating system written in harder times, still running today. It shows up as the Hoarder or the Over-Compensator, and you pay a Scarcity Tax for it: opportunities declined, help refused, panic decisions, a life postponed. The way out is to question the belief, clear what it was built on, and let giving and receiving flow again.",
+     steps:["Catch the moment you hold back on yourself (the price column, the purchase, the offer of help you wave away) and write down the sentence that ran through your head.",
+            "The next time someone offers you a gift, a favour or help, say thank you and receive it, without reaching to pay it back.",
+            "Before the next course or opportunity, look at what you would gain before you look at the fee. Then give one thing freely this week, without keeping score."]}
+};
+var CLEAR = [["C","Confront"],["L","Let Go"],["E","Enlist"],["A","Align"],["R","Rise"]];
+
+/* ===== Build an interleaved, shuffled order: every round of four mixes all loops ===== */
+function shuffle(a){for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t}return a}
+function buildOrder(){
+  var pools={}; ORDER.forEach(function(k){pools[k]=shuffle(BANK[k].map(function(_,i){return i}))});
+  var out=[], last=null;
+  for(var r=0;r<8;r++){
+    var round=shuffle(ORDER.slice());
+    if(round[0]===last){round.push(round.shift())}
+    round.forEach(function(k){out.push([k,pools[k][r]])});
+    last=round[3];
+  }
+  var rq=shuffle([0,1,2]);           // loop-depth statements spread through the audit
+  [11,22,33].forEach(function(pos,i){out.splice(pos,0,["R",rq[i]])});
+  return out;
+}
+
+var order=[], answers=[], idx=0, loopLine="", lead={name:"",email:"",optIn:false};
+var $=function(id){return document.getElementById(id)};
+var CIRC=2*Math.PI*27; $("arc").style.strokeDasharray=CIRC;
+
+function save(){try{localStorage.setItem("rpa2",JSON.stringify({o:order,a:answers,i:idx,l:loopLine}))}catch(e){}}
+function load(){try{return JSON.parse(localStorage.getItem("rpa2")||"null")}catch(e){return null}}
+function clearSave(){try{localStorage.removeItem("rpa2")}catch(e){}}
+
+var saved=load();
+if(saved&&saved.o&&saved.a&&saved.a.some(function(v){return v!==null})) $("resumeBtn").hidden=false;
+
+function show(id){["intro","quiz","loopline","gate","results"].forEach(function(s){$(s).hidden=s!==id}); window.scrollTo(0,0)}
+
+SCALE.forEach(function(lbl,v){
+  var b=document.createElement("button");
+  b.innerHTML="<b>"+v+"</b>"+lbl; b.setAttribute("aria-pressed","false"); b.id="opt"+v;
+  b.addEventListener("click",function(){pick(v)});
+  $("scale").appendChild(b);
+});
+
+function render(){
+  var q=order[idx];
+  $("qtext").textContent=BANK[q[0]][q[1]];
+  $("qnum").textContent=idx+1;
+  $("qcount").textContent="Statement "+(idx+1)+" of "+order.length;
+  var done=answers.filter(function(v){return v!==null}).length;
+  $("arc").style.strokeDashoffset=CIRC*(1-done/order.length);
+  for(var v=0;v<4;v++) $("opt"+v).setAttribute("aria-pressed",answers[idx]===v?"true":"false");
+}
+var lock=false;
+function pick(v){
+  if(lock) return; lock=true;
+  answers[idx]=v; render(); save();
+  setTimeout(function(){lock=false; if(idx<order.length-1){idx++;render()} else {show("loopline"); $("loopText").value=loopLine}},220);
+}
+function goBack(){ if(idx>0){idx--;render()} else show("intro") }
+$("backBtn").addEventListener("click",goBack);
+document.addEventListener("keydown",function(e){
+  if($("quiz").hidden) return;
+  if(/^[0-3]$/.test(e.key)) pick(+e.key);
+  if(e.key==="ArrowLeft") goBack();
+});
+$("startBtn").addEventListener("click",function(){
+  order=buildOrder(); answers=new Array(order.length).fill(null); idx=0; loopLine=""; save(); show("quiz"); render();
+});
+$("resumeBtn").addEventListener("click",function(){
+  order=saved.o; answers=saved.a; loopLine=saved.l||"";
+  idx=answers.indexOf(null);
+  if(idx<0){idx=order.length-1; show("loopline"); $("loopText").value=loopLine; return}
+  show("quiz"); render();
+});
+$("loopNext").addEventListener("click",function(){loopLine=$("loopText").value.trim(); save(); show("gate")});
+$("loopSkip").addEventListener("click",function(){loopLine=""; save(); show("gate")});
+$("loopBack").addEventListener("click",function(){show("quiz"); render()});
+$("gateBack").addEventListener("click",function(){show("loopline")});
+$("retakeBtn").addEventListener("click",function(){clearSave(); $("resumeBtn").hidden=true; show("intro")});
+
+$("gateForm").addEventListener("submit",function(e){
+  e.preventDefault();
+  var n=$("gName").value.trim(), m=$("gEmail").value.trim();
+  if(!n){$("gErr").textContent="Enter your first name."; $("gName").focus(); return}
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(m)){$("gErr").textContent="Enter a valid email address, like name@example.com."; $("gEmail").focus(); return}
+  $("gErr").textContent="";
+  lead={name:n,email:m,optIn:$("gConsent").checked};
+  var res=compute();
+  sendLead(res);
+  report(res);
+});
+
+function band(s){ if(s>=16) return {k:"hot",t:"Running your life"}; if(s>=8) return {k:"warm",t:"Active"}; return {k:"cool",t:"Quiet"} }
+
+function compute(){
+  var sums={S:0,W:0,B:0,P:0,R:0};
+  order.forEach(function(q,i){sums[q[0]]+=answers[i]||0});
+  var ranked=ORDER.slice().sort(function(a,b){return sums[b]-sums[a]});
+  var rootPct=Math.round(sums.R/9*100);
+  var running=ORDER.filter(function(k){return sums[k]>=16}).length;
+  var tier;
+  if(rootPct>=67||running>=3) tier=["The Quantum Partnership · 6 months","At this depth the loop tends to show up in more than one place at once. Six months works the full CLEAR arc with room to return to it as it resurfaces, so it stays broken instead of relocating."];
+  else if(rootPct>=34||running>=2) tier=["The Loop Break · 12 weeks","The full CLEAR method, from Confront through Rise. A loop this established usually needs the whole arc to stop repeating, not just the first two steps."];
+  else tier=["The Reset · 6 weeks","Six weeks built around Confront and Let Go. You are catching "+LOOPS[ranked[0]].label+" early enough that a focused, shorter engagement fits."];
+  return {sums:sums,ranked:ranked,primary:ranked[0],second:ranked[1],rootPct:rootPct,running:running,tier:tier};
+}
+
+function sendLead(r){
+  if(!LEAD_WEBHOOK) return;
+  var body={name:lead.name,email:lead.email,optIn:lead.optIn,
+    spiral:r.sums.S,selfWorth:r.sums.W,burnout:r.sums.B,povertyMindset:r.sums.P,
+    loopDepthPct:r.rootPct,primaryLoop:LOOPS[r.primary].label,tier:r.tier[0],loopInOwnWords:loopLine,
+    takenAt:new Date().toISOString()};
+  try{ fetch(LEAD_WEBHOOK,{method:"POST",mode:"no-cors",headers:{"Content-Type":"text/plain"},body:JSON.stringify(body)}).catch(function(){}) }catch(e){}
+}
+
+var summary="";
+function report(r){
+  var s=r.sums, primary=r.primary, second=r.second;
+  var d=new Date();
+  $("rDate").textContent="Root Pattern Audit · "+lead.name+" · "+d.toLocaleDateString(undefined,{day:"numeric",month:"long",year:"numeric"});
+  var allQuiet=s[primary]<8;
+  $("rTitle").textContent = allQuiet ? lead.name+", no loop is running your life right now" : lead.name+", "+LOOPS[primary].label+" is your loudest loop";
+  $("rLede").textContent = allQuiet
+    ? "Your scores show where the pattern is quietly sitting. That is the easiest time to clear it, before it grows."
+    : (r.running>1
+      ? r.running+" loops are running your life at once. They look like different problems. All four grow from the same root: a pattern you learned long ago, still running the show."
+      : "Different loops, same root underneath: a pattern you learned long ago, still sending you the same lesson until you learn it. Here is where it shows up for you, and where to start.");
+
+  $("loops").innerHTML=ORDER.map(function(k){
+    var b=band(s[k]), pct=Math.round(s[k]/24*100);
+    return '<div class="loop'+(k===primary&&!allQuiet?' primary':'')+'"><span class="name"><span class="dot" style="background:'+LOOPS[k].color+'"></span>'+LOOPS[k].label+' <span class="chip '+b.k+'">'+b.t+'</span></span>'+
+      '<span class="val">'+s[k]+' / 24</span><div class="bar"><i style="width:'+pct+'%;background:'+LOOPS[k].color+'"></i></div></div>';
+  }).join("");
+
+  $("loopCard").hidden=!loopLine; $("loopQuote").textContent=loopLine?"“"+loopLine+"”":"";
+
+  var sol=SOLUTION[primary];
+  $("belief").textContent=sol.belief;
+  var rb = r.rootPct>=67 ? ["Automatic loop","The same problem has followed you across people, places and plans. Changing the setting has not changed the outcome, because the loop travels with you. At this depth, understanding alone stops working; the change has to happen in what you do, in the moment."]
+        : r.rootPct>=34 ? ["Semi-conscious loop","You can see the pattern, and often explain where it came from, yet your week looks the same. Understanding it feels like progress, which is exactly why it lasts. The next move is acting differently the moment it shows up, not afterwards."]
+        : ["Surface loop","The pattern is visible and not yet entrenched. You are catching it early, which makes it far quicker to clear now than it will be in two years."];
+  $("rootPct").textContent=r.rootPct+"%"; $("rootLabel").textContent=rb[0]; $("rootBody").textContent=rb[1];
+
+  $("moveTitle").textContent=sol.title;
+  $("clearStrip").innerHTML=CLEAR.map(function(c,i){
+    var cls=i===sol.lead?"lead":(sol.next.indexOf(i)>=0?"next":"");
+    return '<div class="'+cls+'"><b>'+c[0]+'</b>'+c[1]+'</div>';
+  }).join("");
+  $("moveBody").textContent=sol.body;
+  $("moveSteps").innerHTML=sol.steps.map(function(t){return "<li>"+t+"</li>"}).join("");
+  $("secondNote").textContent = s[second]>=8
+    ? LOOPS[second].label+" is also active ("+s[second]+"/24). Same root, so the same five moves reach it. Its starting move is "+SOLUTION[second].title.replace("Lead with ","")+"."
+    : "CLEAR is worked in order the first time through: Confront, Let Go, Enlist, Align, Rise. Your starting move is where the most weight sits.";
+
+  $("tierTitle").textContent=r.tier[0]; $("tierBody").textContent=r.tier[1];
+  $("bookBtn").href=BOOKING_URL;
+
+  summary="Root Pattern Audit — "+lead.name+" ("+d.toLocaleDateString()+")\n"+
+    ORDER.map(function(k){return LOOPS[k].label+": "+s[k]+"/24 ("+band(s[k]).t+")"}).join("\n")+
+    "\nLoop depth: "+r.rootPct+"% ("+rb[0]+")\nStarting move: "+sol.title+"\nRecommended path: "+r.tier[0]+
+    (loopLine?"\nMy loop: "+loopLine:"");
+  $("copyFallback").hidden=true; $("toast").textContent="";
+  clearSave(); show("results");
+}
+
+$("copyBtn").addEventListener("click",function(){
+  var done=function(){$("toast").textContent="Copied. Paste it into your booking form or notes."};
+  var fail=function(){var t=$("copyFallback");t.value=summary;t.hidden=false;t.focus();t.select();$("toast").textContent="Select the text below and copy it."};
+  try{navigator.clipboard.writeText(summary).then(done,fail)}catch(e){fail()}
+});
+</script>
+
+</body>
+</html>
