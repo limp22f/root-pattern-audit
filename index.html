@@ -442,9 +442,9 @@ function compute(){
   var rootPct=Math.round(sums.R/9*100);
   var running=ORDER.filter(function(k){return sums[k]>=16}).length;
   var tier;
-  if(rootPct>=67||running>=3) tier=["The Quantum Partnership · 6 months","At this depth the loop tends to show up in more than one place at once. Six months works the full CLEAR arc with room to return to it as it resurfaces, so it stays broken instead of relocating."];
-  else if(rootPct>=34||running>=2) tier=["The Loop Break · 12 weeks","The full CLEAR method, from Confront through Rise. A loop this established usually needs the whole arc to stop repeating, not just the first two steps."];
-  else tier=["The Reset · 6 weeks","Six weeks built around Confront and Let Go. You are catching "+LOOPS[ranked[0]].label+" early enough that a focused, shorter engagement fits."];
+  if(rootPct>=67||running>=3) tier=["The Quantum Partnership","At this depth the loop tends to show up in more than one place at once. The deepest engagement works the full CLEAR arc with room to return to it as it resurfaces, so it stays broken instead of relocating."];
+  else if(rootPct>=34||running>=2) tier=["The Loop Break","The full CLEAR method, from Confront through Rise. A loop this established usually needs the whole arc to stop repeating, not just the first two steps."];
+  else tier=["The Reset","A focused engagement built around Confront and Let Go. You are catching "+LOOPS[ranked[0]].label+" early enough that a lighter, targeted approach fits."];
   return {sums:sums,ranked:ranked,primary:ranked[0],second:ranked[1],rootPct:rootPct,running:running,tier:tier};
 }
 
