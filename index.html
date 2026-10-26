@@ -183,7 +183,7 @@ ol.steps{margin:0;padding-left:1.3em;display:flex;flex-direction:column;gap:8px}
     <div class="stack">
       <span class="eyebrow">Your report is ready</span>
       <h2>Where should we send your result?</h2>
-      <p class="small">Your four loop scores, the belief running underneath, and your starting move are one step away.</p>
+      <p class="small">Your four loop scores, the belief running underneath, and your starting move are one step away. We'll also email you a copy of your report.</p>
     </div>
     <div class="locked" aria-hidden="true">
       <div>Spiral<i></i></div><div>Self-Worth<i></i></div><div>Burnout<i></i></div><div>Poverty Mindset<i></i></div>
@@ -197,7 +197,7 @@ ol.steps{margin:0;padding-left:1.3em;display:flex;flex-direction:column;gap:8px}
       </label>
       <label class="row small" for="gConsent" style="align-items:flex-start;gap:10px;flex-wrap:nowrap">
         <input id="gConsent" type="checkbox" style="margin-top:4px">
-        <span>Send me occasional notes from Pei Fang on breaking the loop. Unsubscribe any time.</span>
+        <span>I agree to receive marketing updates and promotional offers from Inner Channel Pte Ltd. You can unsubscribe at any time.</span>
       </label>
       <span class="err" id="gErr" role="alert"></span>
       <div class="row">
@@ -256,6 +256,8 @@ ol.steps{margin:0;padding-left:1.3em;display:flex;flex-direction:column;gap:8px}
       <p>If the block is internal, stacking another course or certification on top of it only makes you a more qualified version of stuck. Bring this report to a free conversation. No pitch, just a real look at whether this is the right fit.</p>
       <a class="btn btn-primary" id="bookBtn" href="#" target="_blank" rel="noopener">Book my free conversation</a>
     </div>
+
+    <p class="small" style="text-align:center">The loops, the CLEAR Method and the practices in this report come from Pei Fang's upcoming book, <em>The Invisible Loop</em>.</p>
 
     <div class="stack" style="gap:8px">
       <div class="row">
@@ -429,8 +431,8 @@ $("gateForm").addEventListener("submit",function(e){
   $("gErr").textContent="";
   lead={name:n,email:m,optIn:$("gConsent").checked};
   var res=compute();
-  sendLead(res);
   report(res);
+  sendLead(res);
 });
 
 function band(s){ if(s>=16) return {k:"hot",t:"Running your life"}; if(s>=8) return {k:"warm",t:"Active"}; return {k:"cool",t:"Quiet"} }
@@ -454,6 +456,7 @@ function sendLead(r){
     spiral:r.sums.S,selfWorth:r.sums.W,burnout:r.sums.B,povertyMindset:r.sums.P,
     loopDepthPct:r.rootPct,primaryLoop:LOOPS[r.primary].label,tier:r.tier[0],loopInOwnWords:loopLine,
     takenAt:new Date().toISOString()};
+  if(r.detail){ for(var k in r.detail) body[k]=r.detail[k] }
   try{ fetch(LEAD_WEBHOOK,{method:"POST",mode:"no-cors",headers:{"Content-Type":"text/plain"},body:JSON.stringify(body)}).catch(function(){}) }catch(e){}
 }
 
@@ -497,7 +500,11 @@ function report(r){
     : "CLEAR is worked in order the first time through: Confront, Let Go, Enlist, Align, Rise. Your starting move is where the most weight sits.";
 
   $("tierTitle").textContent=r.tier[0]; $("tierBody").textContent=r.tier[1];
-  $("bookBtn").href=BOOKING_URL;
+  $("bookBtn").href=BOOKING_URL+(BOOKING_URL.indexOf("?")>=0?"&":"?")+"name="+encodeURIComponent(lead.name)+"&email="+encodeURIComponent(lead.email);
+  r.detail={headline:$("rTitle").textContent,lede:$("rLede").textContent,belief:sol.belief,
+    depthLabel:rb[0],depthBody:rb[1],startingMove:sol.title,moveBody:sol.body,steps:sol.steps,
+    secondNote:$("secondNote").textContent,tierBody:r.tier[1],bookingUrl:$("bookBtn").href,
+    bands:{spiral:band(s.S).t,selfWorth:band(s.W).t,burnout:band(s.B).t,povertyMindset:band(s.P).t}};
 
   summary="Root Pattern Audit — "+lead.name+" ("+d.toLocaleDateString()+")\n"+
     ORDER.map(function(k){return LOOPS[k].label+": "+s[k]+"/24 ("+band(s[k]).t+")"}).join("\n")+
