@@ -219,7 +219,7 @@ ol.steps{margin:0;padding-left:1.3em;display:flex;flex-direction:column;gap:8px}
   <section id="loopline" class="stack" style="gap:20px" hidden>
     <span class="eyebrow">Last step · optional</span>
     <h2>Name your loop</h2>
-    <p>Name the situation that has now repeated at least three times in your life, with different people or in different settings. One or two sentences is enough.</p>
+    <p id="loopPrompt">Name the situation that has now repeated at least three times in your life, with different people or in different settings. One or two sentences is enough.</p>
     <label class="field" for="loopText">My loop
       <textarea id="loopText" placeholder="e.g. Every new role, I end up as the one everyone hands the impossible deadline to."></textarea>
     </label>
@@ -545,6 +545,17 @@ $("c2other").addEventListener("input",function(){cost.c2o=this.value; save()});
 $("c3other").addEventListener("input",function(){cost.c3o=this.value; save()});
 $("c5").addEventListener("input",function(){cost.c5=this.value; save()});
 
+var LOOP_EG={S:"e.g. Every time a project wobbles, I lie awake sure it will all fall apart.",
+  W:"e.g. In every new team, I hold back my ideas until someone else says them.",
+  B:"e.g. Every new role, I end up as the one everyone hands the impossible deadline to.",
+  P:"e.g. Whenever a bigger opportunity comes up, I find a reason it costs too much."};
+function setLoopPrompt(){
+  var s=sums(), top=ranked(s)[0], c2=find(C2,cost.c2);
+  var what = cost.c2==="other" ? cost.c2o.trim() : (c2&&c2[3]) || "";
+  var subject = (s[top]>=8 ? "the "+LOOPS[top].label.replace(/^The /,"")+" pattern" : "the pattern") + (what ? " holding back "+what : " you just put a cost on");
+  $("loopPrompt").textContent="Stay with the same issue you just answered about, "+subject+". Name the situation where it has now repeated at least three times in your life, with different people or in different settings. One or two sentences is enough.";
+  $("loopText").placeholder=LOOP_EG[top];
+}
 function openCost(){
   var s=sums(), top=ranked(s)[0];
   $("costIntro").textContent = s[top]>=8
@@ -564,7 +575,7 @@ $("costNext").addEventListener("click",function(){
   else if(cost.c3.indexOf("other")>=0&&!cost.c3o.trim()) miss.push("who else feels it (type it in)");
   if(!cost.c4) miss.push("hours a week");
   if(miss.length){$("costErr").textContent="Please answer "+miss.join(", ")+"."; return}
-  $("costErr").textContent=""; show("loopline"); $("loopText").value=loopLine;
+  $("costErr").textContent=""; setLoopPrompt(); show("loopline"); $("loopText").value=loopLine;
 });
 
 $("loopNext").addEventListener("click",function(){loopLine=$("loopText").value.trim(); save(); show("gate")});
@@ -642,7 +653,8 @@ function build(){
   var ctaBody = "You have just put a number on what this loop is costing you. If the block is internal, stacking another course or certification on top of it only makes you a more qualified version of stuck. Knowing the pattern is only step one. Breaking it takes an objective mirror. Bring this report to a free Private Advisory Session with me. No generic advice and no pitch, just a direct, honest look at where you are stuck, what needs to shift, and whether working together is the right way to get you there.";
 
   var headline = allQuiet ? lead.name+", no loop is running your life right now" : lead.name+", your loop runs on one belief";
-  var bookingUrl = BOOKING_URL+(BOOKING_URL.indexOf("?")>=0?"&":"?")+"name="+encodeURIComponent(lead.name)+"&email="+encodeURIComponent(lead.email);
+  var brief = "From my Root Pattern Audit. Loudest loop "+LOOPS[primary].label+" ("+s[primary]+"/24). Running "+c1[1].toLowerCase()+". Holding back "+(cost.c2==="other"?c2text:c2[1].toLowerCase())+(valueText?" (worth "+valueText+")":"")+". "+c4[1]+" hours a week. "+passed+" of 3 tests passed. Depth "+rootPct+"%."+(cost.c5.trim()?" Decision on hold: "+cost.c5.trim()+".":"")+(loopLine?" My loop: "+loopLine:"");
+  var bookingUrl = BOOKING_URL+(BOOKING_URL.indexOf("?")>=0?"&":"?")+"name="+encodeURIComponent(lead.name)+"&email="+encodeURIComponent(lead.email)+"&a1="+encodeURIComponent(brief.slice(0,1000));
 
   return {s:s,primary:primary,second:second,rootPct:rootPct,allQuiet:allQuiet,sol:sol,rb:rb,tier:tier,
     P:P,tests:tests,passed:passed,verdict:verdict,secondNote:secondNote,ctaBody:ctaBody,headline:headline,bookingUrl:bookingUrl,
