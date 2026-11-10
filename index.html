@@ -153,7 +153,13 @@ textarea{min-height:110px;resize:vertical}
 .choice{text-align:left;flex-direction:column;align-items:flex-start;gap:6px;padding:16px;font-weight:400;height:100%}
 .choice b{font-family:var(--f-display);font-size:1.25rem;font-weight:600}
 .choice span{font-size:.9rem;color:var(--muted)}
-.choice[aria-pressed="true"]{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent) inset}
+.choice{position:relative;padding-right:44px}
+.choice::after{content:"";position:absolute;top:14px;right:14px;width:20px;height:20px;border-radius:50%;border:2px solid var(--line);background:var(--surface)}
+.choice[aria-pressed="true"]{border-color:var(--accent);background:var(--accent-soft);box-shadow:0 0 0 2px var(--accent) inset}
+.choice[aria-pressed="true"]::after{border-color:var(--accent);background:var(--accent);box-shadow:inset 0 0 0 4px var(--accent-soft)}
+.choice[aria-pressed="true"] b{color:var(--accent)}
+.thanks{background:var(--accent-soft);border:1px solid var(--accent-strong);border-radius:14px;padding:20px;display:flex;flex-direction:column;gap:6px}
+.thanks h3{font-size:1.4rem}
 .confirm{background:var(--accent-soft);border-radius:12px;padding:16px}
 .toast{font-size:.9rem;color:var(--accent);min-height:1.2em}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
@@ -314,25 +320,20 @@ textarea{min-height:110px;resize:vertical}
       <p class="small">Suggested pace, 12 weeks. Each worksheet is in the book.</p>
     </div>
 
-    <div class="card stack">
-      <h2>Name your loop</h2>
-      <p id="nameLoop"></p>
-    </div>
-
     <div class="stack" id="nextWrap" style="gap:14px">
       <hr class="rule">
       <span class="eyebrow">Your next step</span>
       <h2>What would you like next?</h2>
       <div class="choices" id="choices">
-        <button class="choice" data-k="call" aria-pressed="false"><b>Apply for a free Discovery Call</b><span>30-minute Discovery Call to go through your report and map your next step.</span><span id="tierLine"></span></button>
+        <button class="choice" data-k="call" aria-pressed="false"><b>Book a free Discovery Call</b><span>30-minute Discovery Call to go through your report and map your next step.</span><span id="tierLine"></span></button>
         <button class="choice" data-k="book" aria-pressed="false"><b>Join the VIP waiting list</b><span>Be notified when the book, The Invisible Loop, is launched.</span></button>
-        <button class="choice" data-k="both" aria-pressed="false"><b>Both</b><span>Apply for the call and join the VIP waiting list.</span></button>
+        <button class="choice" data-k="both" aria-pressed="false"><b>Both</b><span>Book the call and join the VIP waiting list.</span></button>
       </div>
-      <div class="confirm" id="bookConfirm" hidden></div>
+      <div class="thanks" id="bookConfirm" role="status" hidden></div>
 
       <form id="appForm" class="card stack" style="gap:18px" novalidate hidden>
         <div class="stack" style="gap:6px">
-          <h2>Apply for your free Discovery Call</h2>
+          <h2>Before you book your free Discovery Call</h2>
           <p class="muted">Calls are limited and go to people ready to work on their loop. Answer honestly and in full.</p>
         </div>
         <label class="field" for="a1"><span id="a1label"></span>
@@ -353,16 +354,13 @@ textarea{min-height:110px;resize:vertical}
       </form>
 
       <div class="card stack" id="appDone" hidden>
-        <h2>Application received</h2>
-        <p>Thank you. Now choose a time. Your name, email and answers are passed to the booking page.</p>
+        <h2>Thank you</h2>
+        <p>Now choose a time. Your name, email and answers are passed to the booking page.</p>
         <a class="btn btn-primary" id="bookBtn" href="#" target="_blank" rel="noopener" style="align-self:flex-start">Book my Discovery Call</a>
       </div>
-      <div class="confirm" id="exploreMsg" hidden></div>
+      <div class="thanks" id="exploreMsg" role="status" hidden></div>
 
       <p class="small">The loops, the I CLEAR method and the worksheets in this report come from Pei Fang's book, <em>The Invisible Loop</em>.</p>
-      <div class="row"><button id="copyBtn">Copy my results</button></div>
-      <span class="toast" id="toast" role="status"></span>
-      <textarea id="copyFallback" hidden readonly style="min-height:180px;font-size:.85rem"></textarea>
     </div>
   </section>
 
@@ -768,7 +766,6 @@ function renderReport(r){
       '<span class="meta">'+x.pace+' · '+x.book+'</span><p class="muted">'+esc(x.what)+'</p><p class="act">'+esc(x.act)+'</p></div>';
   }).join("");
 
-  $("nameLoop").textContent=r.nameLoop;
   $("tierLine").textContent="Likely starting point, "+r.tier+".";
   $("a1label").textContent="Your loop in your own words. Describe the situation linked to "+low(PARTS[r.top].label)+" that has repeated at least three times, with different people or in different settings.";
   show("results");
@@ -789,7 +786,8 @@ Array.prototype.forEach.call($("choices").children,function(b){
 });
 function joinBookList(){
   $("bookConfirm").hidden=false;
-  $("bookConfirm").textContent="You are on the VIP book waiting list. You will hear from Pei Fang when The Invisible Loop is published.";
+  $("bookConfirm").innerHTML="<h3>Thank you, "+esc(lead.name)+"</h3><p>You are on the VIP waiting list. You will hear from Pei Fang when <em>The Invisible Loop</em> is launched. Your report is in your inbox.</p>";
+  if(nextChoice==="book") $("bookConfirm").scrollIntoView({behavior:"smooth",block:"center"});
   if(bookListed) return; bookListed=true;
   post({type:"next",id:runId,email:lead.email,name:lead.name,bookList:true,nextStep:nextChoice});
 }
@@ -832,7 +830,7 @@ $("appForm").addEventListener("submit",function(e){
     a4: app.a4==="other" ? $("a4other").value.trim() : find(A4,app.a4)[1], a5: find(A5,app.a5)[1]};
   if(app.a5==="explore"){
     $("appForm").hidden=true; $("exploreMsg").hidden=false;
-    $("exploreMsg").textContent="Discovery Calls are for people ready to start within the next three months, so let's hold the call for now. You are on the VIP book waiting list, and your report is in your inbox. When you are ready to start, come back and apply.";
+    $("exploreMsg").innerHTML="<h3>Thank you, "+esc(lead.name)+"</h3><p>Discovery Calls are for people ready to start within the next three months, so let's hold the call for now. You are on the VIP waiting list, and your report is in your inbox. When you are ready to start, come back and book.</p>"; $("exploreMsg").scrollIntoView({behavior:"smooth",block:"center"});
     if(!bookListed){bookListed=true}
     post({type:"next",id:runId,email:lead.email,name:lead.name,bookList:true,nextStep:"exploring",application:a,applicationStatus:"Exploring, call not offered",report:payload(R)});
     return;
@@ -855,7 +853,7 @@ function payload(r){
     parts:ORDER.map(function(k){var b=band(s[k]);return {label:PARTS[k].label,score:s[k],band:b[2],desc:b[3]}}),
     links:r.links.map(function(l){return PARTS[l[0]].label+" to "+low(PARTS[l[1]].label)+". "+l[2]}),
     signals:r.signals,oldId:r.oldId,doing:r.doing,newId:r.newId,
-    timeLine:r.timeLine,costLines:r.costLines,signs:r.signs,verdict:r.verdict,roadmap:r.roadmap,nameLoop:r.nameLoop,
+    timeLine:r.timeLine,costLines:r.costLines,signs:r.signs,verdict:r.verdict,roadmap:r.roadmap,
     pageUrl:location.href.split("#")[0].split("?")[0],logoUrl:new URL("logo-light.png",location.href).href};
 }
 function post(body){
@@ -863,16 +861,6 @@ function post(body){
   try{ fetch(LEAD_WEBHOOK,{method:"POST",mode:"no-cors",headers:{"Content-Type":"text/plain"},body:JSON.stringify(body)}).catch(function(){}) }catch(e){}
 }
 
-/* ===== Copy ===== */
-$("copyBtn").addEventListener("click",function(){
-  var r=R, s=r.s;
-  var t="The Invisible Loop Diagnostic · "+lead.name+"\n"+ORDER.map(function(k){return PARTS[k].label+": "+s[k]+"/24 ("+band(s[k])[2]+")"}).join("\n")+
-    "\nOverall: "+r.total+"/96 · Depth: "+r.depthScore+"/9 ("+r.depthLabel+")\nOld identity: "+r.oldId+"\nNew identity: "+r.newId+"\n"+r.timeLine+
-    "\nFocus step: "+r.roadmap.filter(function(x){return x.focus})[0].name;
-  var done=function(){$("toast").textContent="Copied."};
-  var fail=function(){var f=$("copyFallback");f.value=t;f.hidden=false;f.focus();f.select();$("toast").textContent="Select the text below and copy it."};
-  try{navigator.clipboard.writeText(t).then(done,fail)}catch(e){fail()}
-});
 </script>
 
 </body>
