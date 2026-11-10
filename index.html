@@ -179,7 +179,8 @@ textarea{min-height:110px;resize:vertical}
         <li>What your loop is costing you, in hours, money and the people around you</li>
         <li>A six-step I CLEAR roadmap, built for your strongest part</li>
       </ul>
-      <div class="row" style="margin-top:6px">
+      <p class="confirm" id="doneNote" hidden>You have already completed the diagnostic on this device. Your report is in your inbox.</p>
+      <div class="row" style="margin-top:6px" id="startRow">
         <button class="btn-primary" id="startBtn">Start the diagnostic</button>
         <button id="resumeBtn" hidden>Resume where I left off</button>
       </div>
@@ -204,10 +205,7 @@ textarea{min-height:110px;resize:vertical}
     <p class="divider-note" id="partNote" hidden>Part 2 of 3. Three statements on how long this has been running.</p>
     <p class="qtext" id="qtext" aria-live="polite"></p>
     <div class="scale" id="scale" role="group" aria-label="Rating"></div>
-    <div class="row" style="justify-content:space-between">
-      <button id="backBtn">Back</button>
-      <span class="small">Keyboard: press 0 to 3</span>
-    </div>
+    <span class="small">Keyboard: press 0 to 3</span>
   </section>
 
   <!-- COST (part 3) -->
@@ -228,7 +226,6 @@ textarea{min-height:110px;resize:vertical}
       <span class="err" id="costErr" role="alert"></span>
       <div class="row">
         <button class="btn-primary" id="costNext">See my report</button>
-        <button id="costBack">Back</button>
       </div>
     </div>
   </section>
@@ -254,7 +251,6 @@ textarea{min-height:110px;resize:vertical}
       <span class="err" id="gErr" role="alert"></span>
       <div class="row">
         <button class="btn-primary" type="submit">Show my report</button>
-        <button type="button" id="gateBack">Back</button>
       </div>
     </form>
   </section>
@@ -328,16 +324,16 @@ textarea{min-height:110px;resize:vertical}
       <span class="eyebrow">Your next step</span>
       <h2>What would you like next?</h2>
       <div class="choices" id="choices">
-        <button class="choice" data-k="call" aria-pressed="false"><b>Apply for a free Discovery Call</b><span>30 minutes with Pei Fang to go through your report and map your first move. By application. Every application is read before the call, and calls with incomplete or low-effort answers are cancelled.</span><span id="tierLine"></span></button>
-        <button class="choice" data-k="book" aria-pressed="false"><b>Join the VIP book waiting list</b><span>One email when The Invisible Loop is published.</span></button>
-        <button class="choice" data-k="both" aria-pressed="false"><b>Both</b><span>Apply for the call and join the VIP book waiting list.</span></button>
+        <button class="choice" data-k="call" aria-pressed="false"><b>Apply for a free Discovery Call</b><span>30-minute Discovery Call to go through your report and map your next step.</span><span id="tierLine"></span></button>
+        <button class="choice" data-k="book" aria-pressed="false"><b>Join the VIP waiting list</b><span>Be notified when the book, The Invisible Loop, is launched.</span></button>
+        <button class="choice" data-k="both" aria-pressed="false"><b>Both</b><span>Apply for the call and join the VIP waiting list.</span></button>
       </div>
       <div class="confirm" id="bookConfirm" hidden></div>
 
       <form id="appForm" class="card stack" style="gap:18px" novalidate hidden>
         <div class="stack" style="gap:6px">
           <h2>Apply for your free Discovery Call</h2>
-          <p class="muted">Calls are limited and go to people ready to work on their loop. Answer honestly and in full. Pei Fang reads every application before the call.</p>
+          <p class="muted">Calls are limited and go to people ready to work on their loop. Answer honestly and in full.</p>
         </div>
         <label class="field" for="a1"><span id="a1label"></span>
           <textarea id="a1"></textarea><span class="count" id="a1c"></span></label>
@@ -348,25 +344,23 @@ textarea{min-height:110px;resize:vertical}
         <div class="cq"><fieldset><legend id="la4">Which best describes you?</legend><div class="chips" id="a4" role="group" aria-labelledby="la4"></div>
           <input type="text" id="a4other" placeholder="Describe your role" hidden></fieldset></div>
         <div class="cq"><fieldset><legend id="la5">When do you want to start working on this?</legend><div class="chips" id="a5" role="group" aria-labelledby="la5"></div></fieldset></div>
-        <label class="field" for="a6">Your LinkedIn profile <span class="qnote">Optional</span>
-          <input type="url" id="a6" placeholder="linkedin.com/in/yourname"></label>
         <label class="row small" for="a7" style="align-items:flex-start;gap:10px;flex-wrap:nowrap">
           <input id="a7" type="checkbox" style="margin-top:4px">
           <span>I understand my answers are reviewed before the call, and the call may be cancelled if they are incomplete.</span>
         </label>
         <span class="err" id="appErr" role="alert"></span>
-        <div class="row"><button class="btn-primary" type="submit">Submit my application</button></div>
+        <div class="row"><button class="btn-primary" type="submit">Submit</button></div>
       </form>
 
       <div class="card stack" id="appDone" hidden>
         <h2>Application received</h2>
-        <p>Thank you. Now choose a time. Your name, email and answers are passed to the booking page, and Pei Fang will read them before your call.</p>
+        <p>Thank you. Now choose a time. Your name, email and answers are passed to the booking page.</p>
         <a class="btn btn-primary" id="bookBtn" href="#" target="_blank" rel="noopener" style="align-self:flex-start">Book my Discovery Call</a>
       </div>
       <div class="confirm" id="exploreMsg" hidden></div>
 
       <p class="small">The loops, the I CLEAR method and the worksheets in this report come from Pei Fang's book, <em>The Invisible Loop</em>.</p>
-      <div class="row"><button id="copyBtn">Copy my results</button><button id="retakeBtn">Retake the diagnostic</button></div>
+      <div class="row"><button id="copyBtn">Copy my results</button></div>
       <span class="toast" id="toast" role="status"></span>
       <textarea id="copyFallback" hidden readonly style="min-height:180px;font-size:.85rem"></textarea>
     </div>
@@ -512,6 +506,7 @@ function save(){try{localStorage.setItem("ild1",JSON.stringify({a:answers,i:idx,
 function load(){try{return JSON.parse(localStorage.getItem("ild1")||"null")}catch(e){return null}}
 function clearSave(){try{localStorage.removeItem("ild1")}catch(e){}}
 var saved=load();
+try{ if(localStorage.getItem("ild_done")){ $("startRow").hidden=true; $("doneNote").hidden=false; saved=null } }catch(e){}
 if(saved&&saved.a&&saved.a.some(function(v){return v!==null})) $("resumeBtn").hidden=false;
 
 function show(id){["intro","quiz","cost","gate","results"].forEach(function(s){$(s).hidden=s!==id}); window.scrollTo(0,0)}
@@ -539,12 +534,9 @@ function pick(v){
   answers[idx]=v; render(); save();
   setTimeout(function(){lock=false; if(idx<Q.length-1){idx++;render()} else openCost()},220);
 }
-function goBack(){ if(idx>0){idx--;render()} else show("intro") }
-$("backBtn").addEventListener("click",goBack);
 document.addEventListener("keydown",function(e){
   if($("quiz").hidden) return;
   if(/^[0-3]$/.test(e.key)) pick(+e.key);
-  if(e.key==="ArrowLeft") goBack();
 });
 $("startBtn").addEventListener("click",function(){
   answers=new Array(Q.length).fill(null); idx=0; cost={c1:null,c2:null,c2o:"",c2a:null,c3:[],c3o:"",c4:null};
@@ -621,7 +613,6 @@ function openCost(){
   $("c2other").value=cost.c2o||""; $("c3other").value=cost.c3o||"";
   $("costErr").textContent=""; syncCost(); show("cost");
 }
-$("costBack").addEventListener("click",function(){show("quiz"); render()});
 $("costNext").addEventListener("click",function(){
   var miss=[];
   if(!cost.c1) miss.push("how long it has been running");
@@ -634,8 +625,6 @@ $("costNext").addEventListener("click",function(){
   if(miss.length){$("costErr").textContent="Please answer "+miss.join(", ")+"."; return}
   show("gate");
 });
-$("gateBack").addEventListener("click",openCost);
-$("retakeBtn").addEventListener("click",function(){clearSave(); location.reload()});
 
 $("gateForm").addEventListener("submit",function(e){
   e.preventDefault();
@@ -646,7 +635,7 @@ $("gateForm").addEventListener("submit",function(e){
   lead={name:n,email:m,optIn:$("gConsent").checked};
   runId=Date.now().toString(36)+Math.random().toString(36).slice(2,8);
   R=build(); renderReport(R); post(Object.assign({type:"report"},payload(R)));
-  clearSave();
+  clearSave(); try{localStorage.setItem("ild_done",new Date().toISOString())}catch(e){}
 });
 
 /* ===== Build ===== */
@@ -806,7 +795,7 @@ function joinBookList(){
 
 chipRow("a4",A4,app,"a4",false,function(){syncPressed("a4",app.a4); $("a4other").hidden=app.a4!=="other"});
 chipRow("a5",A5,app,"a5",false,function(){syncPressed("a5",app.a5)});
-var MIN={a1:25,a2:15,a3:15};
+var MIN={a1:15,a2:15,a3:15};
 function words(t){return (t.trim().match(/[A-Za-zÀ-ɏ'’-]+/g)||[])}
 function counter(id){
   var n=words($(id).value).length, m=MIN[id];
@@ -836,10 +825,10 @@ $("appForm").addEventListener("submit",function(e){
   else if(app.a4==="other"&&!$("a4other").value.trim()) probs.push("Describe your role");
   if(!app.a5) probs.push("Choose when you want to start");
   if(!$("a7").checked) probs.push("Tick the box to confirm");
-  if(probs.length){$("appErr").textContent="Please give a fuller answer. Pei Fang reads every application. "+probs.join(". ")+"."; return}
+  if(probs.length){$("appErr").textContent="Please give a fuller answer. "+probs.join(". ")+"."; return}
   $("appErr").textContent="";
   var a={a1:$("a1").value.trim(),a2:$("a2").value.trim(),a3:$("a3").value.trim(),
-    a4: app.a4==="other" ? $("a4other").value.trim() : find(A4,app.a4)[1], a5: find(A5,app.a5)[1], a6:$("a6").value.trim()};
+    a4: app.a4==="other" ? $("a4other").value.trim() : find(A4,app.a4)[1], a5: find(A5,app.a5)[1]};
   if(app.a5==="explore"){
     $("appForm").hidden=true; $("exploreMsg").hidden=false;
     $("exploreMsg").textContent="Discovery Calls are for people ready to start within the next three months, so let's hold the call for now. You are on the VIP book waiting list, and your report is in your inbox. When you are ready to start, come back and apply.";
