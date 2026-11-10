@@ -175,7 +175,8 @@ textarea{min-height:110px;resize:vertical}
     <span class="eyebrow">Lim Pei Fang · Inner Channel</span>
     <h1>The Invisible Loop Diagnostic</h1>
     <p class="lede"><strong>You have outgrown the beliefs that got you here, but they are still making your decisions.</strong> Success does not break the loop. It raises the price.</p>
-    <p class="lede muted">The loop I see most often in high achievers has four parts. Low self-worth, burnout, fear and scarcity. Each one feeds the next, which is why fixing one part on its own never lasts.</p>
+    <p class="lede muted">Most high achievers don't plateau because they lack discipline, drive or strategy. They plateau because they are caught in an invisible loop, an old pattern tied to their identity that pulls them back, however hard they push.</p>
+    <p class="lede">If you feel like you are running twice as fast and ending up in the same place, you are not failing. Before you try another strategy, see exactly where the loop is holding you back.</p>
     <hr class="rule" style="width:100%">
     <div class="card stack" style="text-align:left;width:100%">
       <h3>In eight minutes, you will see</h3>
@@ -323,6 +324,10 @@ textarea{min-height:110px;resize:vertical}
     <div class="stack" id="nextWrap" style="gap:14px">
       <hr class="rule">
       <span class="eyebrow">Your next step</span>
+      <div class="stack" style="gap:10px">
+        <p class="big" id="bridgeHead"></p>
+        <p>The roadmap shows you what to do. The hard part is seeing your own blind spot from inside the loop. That is the Enlist step, and it is the one high achievers skip most. In a free 30-minute Discovery Call, we go through your report together and map your first move.</p>
+      </div>
       <h2>What would you like next?</h2>
       <div class="choices" id="choices">
         <button class="choice" data-k="call" aria-pressed="false"><b>Book a free Discovery Call</b><span>30-minute Discovery Call to go through your report and map your next step.</span><span id="tierLine"></span></button>
@@ -676,9 +681,9 @@ function build(){
                  : ["Surface","The pattern is visible and not yet entrenched. Small changes in what you do will move it quickly."];
 
   /* cost */
-  var timeLine;
+  var timeLine, yearly=0;
   if(cost.c4==="h0") timeLine="It is not taking much of your week yet. That makes now the cheapest time to clear it.";
-  else { var yearly=Math.round(c4[2]*52/10)*10, tot=Math.round(yearly*c1[2]/10)*10, weeks=Math.round(tot/40);
+  else { yearly=Math.round(c4[2]*52/10)*10, tot=Math.round(yearly*c1[2]/10)*10, weeks=Math.round(tot/40);
     timeLine="At "+c4[1].toLowerCase()+" hours a week, that is about "+fmt(yearly)+" hours a year. Over "+c1[3]+", around "+fmt(tot)+" hours, or "+fmt(weeks)+" working weeks."; }
   var costLines=[];
   costLines.push(cost.c2==="other" ? "It is holding back "+c2text+"." : c2[2]);
@@ -700,7 +705,7 @@ function build(){
 
   return {s:s,top:top,second:rk[1],total:total,tied:tied,quiet:quiet,title:title,tieLine:tieLine,links:links,signals:signals,
     oldId:c.oldId,doing:c.doing,newId:c.newId,depthScore:d,depthLabel:depth[0],depthBody:depth[1],
-    timeLine:timeLine,costLines:costLines,signs:signs,passed:passed,verdict:verdict,tier:tier,roadmap:roadmap,
+    timeLine:timeLine,yearly:yearly,costLines:costLines,signs:signs,passed:passed,verdict:verdict,tier:tier,roadmap:roadmap,
     c1:c1[1],c2:c2text,c2a:c2a?c2a[1]:"",c3:cost.c3.map(function(x){return x==="other"?cost.c3o.trim():find(C3,x)[1]}).join(", "),c4:c4[1],
     nameLoop:"Your score shows which part has the strongest hold on you. Now name your loop in your own words. Write down the situation linked to "+low(PARTS[top].label)+" that has repeated at least three times in your life, with different people or in different settings. Keep it where you can see it. You will need it for every step above."};
 }
@@ -766,6 +771,9 @@ function renderReport(r){
       '<span class="meta">'+x.pace+' · '+x.book+'</span><p class="muted">'+esc(x.what)+'</p><p class="act">'+esc(x.act)+'</p></div>';
   }).join("");
 
+  $("bridgeHead").textContent = r.quiet
+    ? lead.name+", no part of your loop has a strong hold on you yet, which makes this the easiest time to clear it."
+    : lead.name+", your report shows "+low(PARTS[r.top].label)+" has the strongest hold on you"+(r.yearly ? ", and it is costing you about "+fmt(r.yearly)+" hours a year." : ".");
   $("tierLine").textContent="Likely starting point, "+r.tier+".";
   $("a1label").textContent="Your loop in your own words. Describe the situation linked to "+low(PARTS[r.top].label)+" that has repeated at least three times, with different people or in different settings.";
   show("results");
