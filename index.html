@@ -515,6 +515,7 @@ function save(){try{localStorage.setItem("ild1",JSON.stringify({a:answers,i:idx,
 function load(){try{return JSON.parse(localStorage.getItem("ild1")||"null")}catch(e){return null}}
 function clearSave(){try{localStorage.removeItem("ild1")}catch(e){}}
 var saved=load();
+try{ if(/[?&#]reset\b/.test(location.search+location.hash)){localStorage.removeItem("ild_done");localStorage.removeItem("ild1")} }catch(e){}
 try{ if(localStorage.getItem("ild_done")){ $("startRow").hidden=true; $("doneNote").hidden=false; saved=null } }catch(e){}
 if(saved&&saved.a&&saved.a.some(function(v){return v!==null})) $("resumeBtn").hidden=false;
 
