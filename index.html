@@ -225,7 +225,7 @@ textarea{min-height:110px;resize:vertical}
     </div>
     <div class="card stack" style="gap:24px">
       <div class="cq"><fieldset><legend id="lc1">How long has this been running?</legend><div class="chips" id="c1" role="group" aria-labelledby="lc1"></div></fieldset></div>
-      <div class="cq"><fieldset><legend id="lc2">What is it holding back most right now?</legend><div class="chips" id="c2" role="group" aria-labelledby="lc2"></div>
+      <div class="cq"><fieldset><legend id="lc2">What is it holding back right now? <span class="qnote">Tick all that apply.</span></legend><div class="chips" id="c2" role="group" aria-labelledby="lc2"></div>
         <input type="text" id="c2other" placeholder="Type what it is holding back" hidden></fieldset></div>
       <div class="cq" id="c2awrap" hidden><fieldset><legend id="lc2a"></legend><div class="chips" id="c2a" role="group" aria-labelledby="lc2a"></div></fieldset></div>
       <div class="cq"><fieldset><legend id="lc3">Who else feels it? <span class="qnote">Tick all that apply.</span></legend><div class="chips" id="c3" role="group" aria-labelledby="lc3"></div>
@@ -442,7 +442,7 @@ var C2 = [["role","Promotion or role","It is holding back your next role.","your
 var C2A = [["v1","Under US$10,000"],["v2","US$10,000 to US$50,000"],["v3","US$50,000 to US$250,000"],["v4","More than US$250,000"],["v0","Prefer not to say"]];
 var C3 = [["me","Just me",""],["team","My team or colleagues","your team or colleagues"],["clients","Clients or investors","your clients or investors"],["family","My family","your family"],["other","Someone else (type it)",""]];
 var C4 = [["h0","0 to 2",1],["h1","3 to 5",4],["h2","6 to 10",8],["h3","11 to 20",15],["h4","More than 20",25]];
-var A4 = [["founder","Founder or business owner"],["exec","Senior executive, dealmaker or investor"],["mid","Mid-career professional facing a change in role"],["carry","Carrying a career and a family at once"],["other","Other (type it)"]];
+var A4 = [["founder","Founder or business owner"],["corp","Executive in a corporate role"],["exec","Dealmaker or investor"],["mid","Mid-career professional facing a change in role"],["carry","Carrying a career and a family at once"],["other","Other (type it)"]];
 var A5 = [["30","Within 30 days"],["90","Within 3 months"],["later","Later than 3 months"],["explore","I am just exploring"]];
 
 var BANDS = [[16,"hot","Strong","Has a strong hold on you."],[8,"warm","Active","Running in the background."],[0,"cool","Quiet","Not doing much right now."]];
@@ -504,7 +504,7 @@ var ROADMAP = [
 
 /* ===== State ===== */
 var answers=[], idx=0, lead={name:"",email:"",optIn:false}, R=null, runId="";
-var cost={c1:null,c2:null,c2o:"",c2a:null,c3:[],c3o:"",c4:null};
+var cost={c1:null,c2:[],c2o:"",c2a:null,c3:[],c3o:"",c4:null};
 var app={a4:null,a4o:"",a5:null}, nextChoice=null, bookListed=false;
 var $=function(id){return document.getElementById(id)};
 var CIRC=2*Math.PI*27; $("arc").style.strokeDasharray=CIRC;
@@ -548,11 +548,11 @@ document.addEventListener("keydown",function(e){
   if(/^[0-3]$/.test(e.key)) pick(+e.key);
 });
 $("startBtn").addEventListener("click",function(){
-  answers=new Array(Q.length).fill(null); idx=0; cost={c1:null,c2:null,c2o:"",c2a:null,c3:[],c3o:"",c4:null};
+  answers=new Array(Q.length).fill(null); idx=0; cost={c1:null,c2:[],c2o:"",c2a:null,c3:[],c3o:"",c4:null};
   save(); show("quiz"); render();
 });
 $("resumeBtn").addEventListener("click",function(){
-  answers=saved.a; cost=saved.c||cost; idx=answers.indexOf(null);
+  answers=saved.a; cost=saved.c||cost; if(!Array.isArray(cost.c2)) cost.c2=cost.c2?[cost.c2]:[]; idx=answers.indexOf(null);
   if(idx<0){idx=Q.length-1; openCost(); return}
   show("quiz"); render();
 });
@@ -591,23 +591,23 @@ function syncPressed(el,val,multi){
   });
 }
 function syncCost(){
-  syncPressed("c1",cost.c1); syncPressed("c2",cost.c2); syncPressed("c2a",cost.c2a); syncPressed("c3",cost.c3,true); syncPressed("c4",cost.c4);
-  $("c2other").hidden = cost.c2!=="other";
+  syncPressed("c1",cost.c1); syncPressed("c2",cost.c2,true); syncPressed("c2a",cost.c2a); syncPressed("c3",cost.c3,true); syncPressed("c4",cost.c4);
+  $("c2other").hidden = cost.c2.indexOf("other")<0;
   $("c3other").hidden = cost.c3.indexOf("other")<0;
-  var c2=find(C2,cost.c2), money=!!(c2&&c2[4]);
+  var money=cost.c2.some(function(k){var o=find(C2,k); return o&&o[4]});
   $("c2awrap").hidden=!money;
   if(money) $("lc2a").textContent="Roughly what would clearing this be worth to you over the next 12 months?";
   else cost.c2a=null;
   save();
 }
 chipRow("c1",C1,cost,"c1",false,syncCost);
-chipRow("c2",C2,cost,"c2",false,syncCost);
+chipRow("c2",C2,cost,"c2",true,syncCost);
 chipRow("c2a",C2A,cost,"c2a",false,syncCost);
 chipRow("c3",C3,cost,"c3",true,syncCost);
 chipRow("c4",C4,cost,"c4",false,syncCost);
 /* chip rows read the live object, so rebind after resume */
 function rebindCost(){
-  chipRow("c1",C1,cost,"c1",false,syncCost); chipRow("c2",C2,cost,"c2",false,syncCost); chipRow("c2a",C2A,cost,"c2a",false,syncCost);
+  chipRow("c1",C1,cost,"c1",false,syncCost); chipRow("c2",C2,cost,"c2",true,syncCost); chipRow("c2a",C2A,cost,"c2a",false,syncCost);
   chipRow("c3",C3,cost,"c3",true,syncCost); chipRow("c4",C4,cost,"c4",false,syncCost);
 }
 $("c2other").addEventListener("input",function(){cost.c2o=this.value; save()});
@@ -625,8 +625,8 @@ function openCost(){
 $("costNext").addEventListener("click",function(){
   var miss=[];
   if(!cost.c1) miss.push("how long it has been running");
-  if(!cost.c2) miss.push("what it is holding back");
-  else if(cost.c2==="other"&&!cost.c2o.trim()) miss.push("what it is holding back (type it in)");
+  if(!cost.c2.length) miss.push("what it is holding back");
+  else if(cost.c2.indexOf("other")>=0&&!cost.c2o.trim()) miss.push("what it is holding back (type it in)");
   if(!$("c2awrap").hidden&&!cost.c2a) miss.push("what clearing it would be worth");
   if(!cost.c3.length) miss.push("who else feels it");
   else if(cost.c3.indexOf("other")>=0&&!cost.c3o.trim()) miss.push("who else feels it (type it in)");
@@ -660,8 +660,10 @@ function build(){
   var quiet = s[top]<8;
   var strongCount=ORDER.filter(function(k){return s[k]>=16}).length;
   var c=CONTENT[top];
-  var c1=find(C1,cost.c1), c2=find(C2,cost.c2), c2a=find(C2A,cost.c2a), c4=find(C4,cost.c4);
-  var c2text = cost.c2==="other" ? cost.c2o.trim() : c2[1];
+  var c1=find(C1,cost.c1), c2a=find(C2A,cost.c2a), c4=find(C4,cost.c4);
+  var otherText=cost.c2o.trim();
+  var c2text = cost.c2.map(function(k){return k==="other" ? otherText : find(C2,k)[1]}).join(", ");
+  var heldList = cost.c2.map(function(k){return k==="other" ? otherText : find(C2,k)[3]});
   var c3names = cost.c3.filter(function(x){return x!=="me"}).map(function(x){return x==="other"?cost.c3o.trim().replace(/^my\b/i,"your"):find(C3,x)[2]}).filter(Boolean);
 
   var title = quiet ? lead.name+", no part of the loop has a strong hold on you right now"
@@ -691,12 +693,12 @@ function build(){
   else { yearly=Math.round(c4[2]*52/10)*10, tot=Math.round(yearly*c1[2]/10)*10, weeks=Math.round(tot/40);
     timeLine="At "+c4[1].toLowerCase()+" hours a week, that is about "+fmt(yearly)+" hours a year. Over "+c1[3]+", around "+fmt(tot)+" hours, or "+fmt(weeks)+" working weeks."; }
   var costLines=[];
-  costLines.push(cost.c2==="other" ? "It is holding back "+c2text+"." : c2[2]);
+  cost.c2.forEach(function(k){costLines.push(k==="other" ? "It is holding back "+otherText+"." : find(C2,k)[2])});
   if(c2a&&c2a[0]!=="v0") costLines.push("By your own estimate, clearing it is worth "+c2a[1].replace("Under","under").replace("More than","more than")+" over the next 12 months.");
   costLines.push(c3names.length ? cap(joinList(c3names))+" feel it too." : "For now, you are the one carrying it.");
   costLines.push(c.cost);
 
-  var held = cost.c2==="other" ? c2text : c2[3];
+  var held = joinList(heldList);
   var signs=[
     {name:"It repeats, with different people or in a different setting", yes:s.repeats, d:s.repeats?"Your answers say it has come back in new settings.":"No clear repeat in a new setting yet."},
     {name:"It caps the result you want most", yes:true, d:"You named "+held+"."},
@@ -727,7 +729,7 @@ function build(){
     S:"Accept the next offer of help this week without paying it back, and give one thing freely without keeping score."};
   var moves=[
     {title:"Change the identity running it", text:MOVE1[top]},
-    {title:"Take on what it is holding back", text:MOVE2[cost.c2]},
+    {title:"Take on what it is holding back", text:MOVE2[cost.c2[0]]},
     {title:"Break the pattern once", text:MOVE3[top]}];
   var methodLine="These come from my I CLEAR method. In a free Discovery Call, we look at how the full method applies to "+held+".";
   var roadmap=ROADMAP.map(function(r,i){return {k:r.k,name:r.name,pace:r.pace,book:r.book,what:r.what,act:r.act[top],focus:i===c.focus}});
