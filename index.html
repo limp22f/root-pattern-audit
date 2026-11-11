@@ -46,7 +46,7 @@ h1{font-size:clamp(2.2rem,7vw,3.1rem)}
 h2{font-size:clamp(1.55rem,4.6vw,1.9rem)}
 h3{font-size:1.3rem}
 p{margin:0}
-ul.plain{margin:0;padding-left:1.2em;display:flex;flex-direction:column;gap:6px}
+ul.plain,ol.plain{margin:0;padding-left:1.2em;display:flex;flex-direction:column;gap:6px}
 .eyebrow{font-family:var(--f-brand);font-size:.74rem;letter-spacing:.2em;text-transform:uppercase;color:var(--accent);font-weight:600}
 .lede{font-size:1.12rem;max-width:62ch}
 .muted{color:var(--muted)}
@@ -181,12 +181,12 @@ textarea{min-height:110px;resize:vertical}
     <hr class="rule" style="width:100%">
     <div class="card stack" style="text-align:left;width:100%">
       <h3>In eight minutes, you will see</h3>
-      <ul class="plain">
-        <li>Your score on each of the four parts, and which one has the strongest hold on you</li>
-        <li>The old identity running your loop, and the new one to choose</li>
-        <li>What your loop is costing you, in hours, money and the people around you</li>
-        <li>Three ways to start breaking your loop this week, based on your answers</li>
-      </ul>
+      <ol class="plain">
+        <li>The pattern running your loop, and which part has the strongest hold on you</li>
+        <li>The old identity behind it, and the new one to choose</li>
+        <li>What it is costing you, in time, money and the people around you</li>
+        <li>Three ways to start breaking your loop this week</li>
+      </ol>
       <p class="confirm" id="doneNote" hidden>You have already completed the diagnostic on this device. Your report is in your inbox.</p>
       <div class="row" style="margin-top:6px" id="startRow">
         <button class="btn-primary" id="startBtn">Start the diagnostic</button>
