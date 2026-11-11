@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="description" content="An eight-minute diagnostic from Lim Pei Fang. See which part of your loop has the strongest hold on you, what it is costing you, and your six-step I CLEAR roadmap.">
+<meta name="description" content="An eight-minute diagnostic from Lim Pei Fang. See which part of your loop has the strongest hold on you, what it is costing you, and three ways to start breaking it.">
 <meta property="og:title" content="The Invisible Loop Diagnostic">
 <meta property="og:description" content="You have outgrown the beliefs that got you here, but they are still making your decisions. Success does not break the loop. It raises the price.">
 <meta property="og:type" content="website">
@@ -147,6 +147,7 @@ textarea{min-height:110px;resize:vertical}
 .step h3{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
 .step .meta{font-size:.85rem;color:var(--muted)}
 .step .act{font-weight:500}
+.method{border-top:1px solid var(--line);padding-top:14px;font-weight:500}
 .focus-tag{font-family:var(--f-body);font-size:.68rem;letter-spacing:.08em;text-transform:uppercase;font-weight:700;background:var(--accent);color:var(--on-accent);padding:2px 8px;border-radius:99px}
 .choices{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
 @media (max-width:620px){.choices{grid-template-columns:1fr}}
@@ -184,7 +185,7 @@ textarea{min-height:110px;resize:vertical}
         <li>Your score on each of the four parts, and which one has the strongest hold on you</li>
         <li>The old identity running your loop, and the new one to choose</li>
         <li>What your loop is costing you, in hours, money and the people around you</li>
-        <li>A six-step I CLEAR roadmap, built for your strongest part</li>
+        <li>Three ways to start breaking your loop this week, based on your answers</li>
       </ul>
       <p class="confirm" id="doneNote" hidden>You have already completed the diagnostic on this device. Your report is in your inbox.</p>
       <div class="row" style="margin-top:6px" id="startRow">
@@ -315,10 +316,9 @@ textarea{min-height:110px;resize:vertical}
     </div>
 
     <div class="card stack">
-      <h2>Your I CLEAR roadmap</h2>
-      <p class="muted">My loop never broke with a single step. It needed all six, worked in order, and yours will too. Your focus step is marked. It is where to spend extra time, and often the one you will be tempted to skip.</p>
+      <h2>Three ways to start breaking your loop this week</h2>
       <div class="steps" id="steps"></div>
-      <p class="small">Suggested pace, 12 weeks. Each worksheet is in the book.</p>
+      <p class="method" id="methodLine"></p>
     </div>
 
     <div class="stack" id="nextWrap" style="gap:14px">
@@ -326,7 +326,7 @@ textarea{min-height:110px;resize:vertical}
       <span class="eyebrow">Your next step</span>
       <div class="stack" style="gap:10px">
         <p class="big" id="bridgeHead"></p>
-        <p>The roadmap shows you what to do. The hard part is seeing your own blind spot from inside the loop. That is the Enlist step, and it is the one high achievers skip most. In a free 30-minute Discovery Call, we go through your report together and map your first move.</p>
+        <p>These three moves are a start. The hard part is seeing your own blind spot from inside the loop. In a free 30-minute Discovery Call, we go through your report together and map your next step.</p>
       </div>
       <h2>What would you like next?</h2>
       <div class="choices" id="choices">
@@ -362,10 +362,15 @@ textarea{min-height:110px;resize:vertical}
         <h2>Thank you</h2>
         <p>Now choose a time. Your name, email and answers are passed to the booking page.</p>
         <a class="btn btn-primary" id="bookBtn" href="#" target="_blank" rel="noopener" style="align-self:flex-start">Book my Discovery Call</a>
+        <p class="small">Having trouble finding a time, or a technical issue? Reach out directly at <a href="mailto:pf@limpeifang.com">pf@limpeifang.com</a>.</p>
       </div>
       <div class="thanks" id="exploreMsg" role="status" hidden></div>
 
-      <p class="small">The loops, the I CLEAR method and the worksheets in this report come from Pei Fang's book, <em>The Invisible Loop</em>.</p>
+      <p class="small">The loops and the moves in this report come from Pei Fang's upcoming book, <em>The Invisible Loop</em>.</p>
+      <div class="thanks" style="text-align:center">
+        <h3>Thank you for taking The Invisible Loop Diagnostic</h3>
+        <p>Having trouble finding a time, or a technical issue? Reach out directly at <a href="mailto:pf@limpeifang.com">pf@limpeifang.com</a>.</p>
+      </div>
     </div>
   </section>
 
@@ -438,7 +443,7 @@ var C2A = [["v1","Under US$10,000"],["v2","US$10,000 to US$50,000"],["v3","US$50
 var C3 = [["me","Just me",""],["team","My team or colleagues","your team or colleagues"],["clients","Clients or investors","your clients or investors"],["family","My family","your family"],["other","Someone else (type it)",""]];
 var C4 = [["h0","0 to 2",1],["h1","3 to 5",4],["h2","6 to 10",8],["h3","11 to 20",15],["h4","More than 20",25]];
 var A4 = [["founder","Founder or business owner"],["exec","Senior executive, dealmaker or investor"],["mid","Mid-career professional facing a change in role"],["carry","Carrying a career and a family at once"],["other","Other (type it)"]];
-var A5 = [["30","In the next 30 days"],["90","In the next three months"],["explore","I am just exploring"]];
+var A5 = [["30","Within 30 days"],["90","Within 3 months"],["later","Later than 3 months"],["explore","I am just exploring"]];
 
 var BANDS = [[16,"hot","Strong","Has a strong hold on you."],[8,"warm","Active","Running in the background."],[0,"cool","Quiet","Not doing much right now."]];
 
@@ -701,11 +706,35 @@ function build(){
 
   var tier = (d>=6||strongCount>=3) ? "The Quantum Partnership" : (d>=3||strongCount>=2) ? "The Loop Break" : "The Reset";
 
+  var MOVE1={
+    W:"Write down the old identity, \u201cI am not good enough\u201d, and next to it the new one, \u201cI am a confident person who knows my own worth\u201d. Before your next decision this week, ask what that person would do.",
+    B:"Write down the old identity, \u201cIf I stop producing, I will be forgotten\u201d, and next to it the new one, \u201cI am valuable for who I am, whether I am producing or not\u201d. At 6pm this week, ask what that person would do.",
+    F:"Write down the old identity, \u201cI am my job title\u201d, and next to it the new one, \u201cI am more than one job title\u201d. Name one part of you beyond your title and give it an hour this week.",
+    S:"Write down the old identity, \u201cThere is not enough\u201d, and next to it the new one, \u201cI have enough, with plenty to give\u201d. Before your next money decision, ask what that person would do."};
+  var MOVE2={
+    role:"Write down the next role you want and the real reason you have not asked for it. If the reason sounds like the old identity, it is the loop talking, not the facts.",
+    earn:"Write down the number you would charge or ask for if you knew your worth. Notice the first reason your mind gives for not asking. That reason is the loop.",
+    deal:"Before your next deal or investment decision, write down what you would do if fear were not in the room. Compare it with what you were about to do.",
+    health:"Pick one evening this week to stop at a set time, and keep it. Notice what you feel when you stop. That feeling is what the busyness has been covering.",
+    rel:"Tell the person who matters one honest thing about what this pattern has cost them. One sentence, no excuses.",
+    peace:"When the worry starts this week, write it down and split it in two. What actually happened, and what you added to it.",
+    stay:"Before you decide to stay or leave, write down the pattern you would take with you either way. If it would follow you to the next desk, deal with that first, then decide.",
+    other:"Write down one decision about "+(cost.c2o.trim()||"it")+" that you have been putting off, and the old belief behind the delay. Seeing the belief is the first step to stopping it making the call."};
+  var MOVE3={
+    W:"Take one criticism that still stings and sort it. Was it a real mistake, your best at the time, or their bad day? Keep only what is true.",
+    B:"Hand off one task this week. Name who, and by when. Not a hint, a clear request.",
+    F:"Write down the event that taught you to expect the worst, and the rule you told yourself after it. Ask what else it could have meant.",
+    S:"Accept the next offer of help this week without paying it back, and give one thing freely without keeping score."};
+  var moves=[
+    {title:"Change the identity running it", text:MOVE1[top]},
+    {title:"Take on what it is holding back", text:MOVE2[cost.c2]},
+    {title:"Break the pattern once", text:MOVE3[top]}];
+  var methodLine="These come from my I CLEAR method. In a free Discovery Call, we look at how the full method applies to "+held+".";
   var roadmap=ROADMAP.map(function(r,i){return {k:r.k,name:r.name,pace:r.pace,book:r.book,what:r.what,act:r.act[top],focus:i===c.focus}});
 
   return {s:s,top:top,second:rk[1],total:total,tied:tied,quiet:quiet,title:title,tieLine:tieLine,links:links,signals:signals,
     oldId:c.oldId,doing:c.doing,newId:c.newId,depthScore:d,depthLabel:depth[0],depthBody:depth[1],
-    timeLine:timeLine,yearly:yearly,costLines:costLines,signs:signs,passed:passed,verdict:verdict,tier:tier,roadmap:roadmap,
+    timeLine:timeLine,yearly:yearly,costLines:costLines,signs:signs,passed:passed,verdict:verdict,tier:tier,roadmap:roadmap,moves:moves,methodLine:methodLine,
     c1:c1[1],c2:c2text,c2a:c2a?c2a[1]:"",c3:cost.c3.map(function(x){return x==="other"?cost.c3o.trim():find(C3,x)[1]}).join(", "),c4:c4[1],
     nameLoop:"Your score shows which part has the strongest hold on you. Now name your loop in your own words. Write down the situation linked to "+low(PARTS[top].label)+" that has repeated at least three times in your life, with different people or in different settings. Keep it where you can see it. You will need it for every step above."};
 }
@@ -766,10 +795,10 @@ function renderReport(r){
   $("signs").innerHTML=r.signs.map(function(x){return '<div class="sign"><b>'+esc(x.name)+'</b><span class="chip '+(x.yes?"hot":"cool")+'">'+(x.yes?"Yes":"Not yet")+'</span><span class="d">'+esc(x.d)+'</span></div>'}).join("");
   $("verdict").textContent=r.verdict;
 
-  $("steps").innerHTML=r.roadmap.map(function(x){
-    return '<div class="step'+(x.focus?' focus':'')+'"><span class="n">'+x.k+'</span><h3>'+x.name+(x.focus?' <span class="focus-tag">Your focus step</span>':'')+'</h3>'+
-      '<span class="meta">'+x.pace+' · '+x.book+'</span><p class="muted">'+esc(x.what)+'</p><p class="act">'+esc(x.act)+'</p></div>';
+  $("steps").innerHTML=r.moves.map(function(x,i){
+    return '<div class="step"><span class="n">'+(i+1)+'</span><h3>'+esc(x.title)+'</h3><p class="act">'+esc(x.text)+'</p></div>';
   }).join("");
+  $("methodLine").textContent=r.methodLine;
 
   $("bridgeHead").textContent = r.quiet
     ? lead.name+", no part of your loop has a strong hold on you yet, which makes this the easiest time to clear it."
@@ -838,7 +867,7 @@ $("appForm").addEventListener("submit",function(e){
     a4: app.a4==="other" ? $("a4other").value.trim() : find(A4,app.a4)[1], a5: find(A5,app.a5)[1]};
   if(app.a5==="explore"){
     $("appForm").hidden=true; $("exploreMsg").hidden=false;
-    $("exploreMsg").innerHTML="<h3>Thank you, "+esc(lead.name)+"</h3><p>Discovery Calls are for people ready to start within the next three months, so let's hold the call for now. You are on the VIP waiting list, and your report is in your inbox. When you are ready to start, come back and book.</p>"; $("exploreMsg").scrollIntoView({behavior:"smooth",block:"center"});
+    $("exploreMsg").innerHTML="<h3>Thank you, "+esc(lead.name)+"</h3><p>It looks like you are in exploration mode right now. Since you are not quite ready for a dedicated advisory engagement, the best place to start is my upcoming book, <em>The Invisible Loop</em>, which maps out the exact framework for breaking this pattern on your own.</p><p>You are on the VIP waiting list, so you will hear from me when it launches. Your report is in your inbox.</p>"; $("exploreMsg").scrollIntoView({behavior:"smooth",block:"center"});
     if(!bookListed){bookListed=true}
     post({type:"next",id:runId,email:lead.email,name:lead.name,bookList:true,nextStep:"exploring",application:a,applicationStatus:"Exploring, call not offered",report:payload(R)});
     return;
@@ -861,7 +890,7 @@ function payload(r){
     parts:ORDER.map(function(k){var b=band(s[k]);return {label:PARTS[k].label,score:s[k],band:b[2],desc:b[3]}}),
     links:r.links.map(function(l){return PARTS[l[0]].label+" to "+low(PARTS[l[1]].label)+". "+l[2]}),
     signals:r.signals,oldId:r.oldId,doing:r.doing,newId:r.newId,
-    timeLine:r.timeLine,costLines:r.costLines,signs:r.signs,verdict:r.verdict,roadmap:r.roadmap,
+    timeLine:r.timeLine,costLines:r.costLines,signs:r.signs,verdict:r.verdict,roadmap:r.moves.map(function(x,i){return {k:String(i+1),name:x.title,act:x.text}}),moves:r.moves,methodLine:r.methodLine,
     pageUrl:location.href.split("#")[0].split("?")[0],logoUrl:new URL("logo-light.png",location.href).href};
 }
 function post(body){
