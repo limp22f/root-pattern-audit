@@ -330,7 +330,7 @@ textarea{min-height:110px;resize:vertical}
       </div>
       <h2>What would you like next?</h2>
       <div class="choices" id="choices">
-        <button class="choice" data-k="call" aria-pressed="false"><b>Book a free Discovery Call</b><span>30-minute Discovery Call to go through your report and map your next step.</span><span id="tierLine"></span></button>
+        <button class="choice" data-k="call" aria-pressed="false"><b>Book a free Discovery Call</b><span>30-minute Discovery Call to go through your report and map your next step.</span></button>
         <button class="choice" data-k="book" aria-pressed="false"><b>Join the VIP waiting list</b><span>Be notified when the book, The Invisible Loop, is launched.</span></button>
         <button class="choice" data-k="both" aria-pressed="false"><b>Both</b><span>Book the call and join the VIP waiting list.</span></button>
       </div>
@@ -806,7 +806,6 @@ function renderReport(r){
   $("bridgeHead").textContent = r.quiet
     ? lead.name+", no part of your loop has a strong hold on you yet, which makes this the easiest time to clear it."
     : lead.name+", your report shows "+low(PARTS[r.top].label)+" has the strongest hold on you"+(r.yearly ? ", and it is costing you about "+fmt(r.yearly)+" hours a year." : ".");
-  $("tierLine").textContent="Likely starting point, "+r.tier+".";
   $("a1label").textContent="Your loop in your own words. Describe the situation linked to "+low(PARTS[r.top].label)+" that has repeated at least three times, with different people or in different settings.";
   show("results");
 }
